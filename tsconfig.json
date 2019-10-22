@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "target": "es6", // 不能设为es5，否则会出现 arguments cannot be referenced in async function in es5...
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "lib": ["dom", "es6"],
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@utils/*": ["./utils/*"],
+      "@constants/*": ["./constants/*"],
+      "@dbTypes": ["./db/types.ts"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"]
+}
