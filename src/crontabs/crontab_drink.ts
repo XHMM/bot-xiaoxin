@@ -66,7 +66,7 @@ export default function runDrinkCrontab(): void {
   if (!isProd()) {
     drinkCrontab.registerJob(
       'drink_remind-test',
-      '*/10 * * * *',
+      '*/30 * * * *',
       createRemind(1, '睡前来一杯，补充睡眠所需水分，但别喝太多哟')
     );
   }

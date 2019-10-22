@@ -24,3 +24,11 @@ export function logInfo(...args: any[]): void {
     if (!(controlledWithENV && !isProd())) signale.info(...args);
   } else signale.info(...args);
 }
+
+export function sleep(seconds: number): Promise<void> {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, seconds)
+  })
+}

@@ -8,9 +8,9 @@ import {
   CQRawMessageHelper, fromQQGroupAnonymousMessage, fromQQGroupMessage
 } from 'lemon-bot';
 import { conditionalArrayMerge } from '@xhmm/utils';
+import { Question_Secret, ColNames, DbName } from '@constants/constants';
 import { questionCollection } from '../../db/collections';
 import { StudyBotCommandContext } from './types';
-import { Question_Secret, ColNames, DbName } from '@constants/constants';
 
 class Question1Command extends Command<StudyBotCommandContext> {
   parse({ rawMessage }: ParseParams): ParseReturn {

@@ -36,10 +36,10 @@ export default async function getWordTranslation(word: string): Promise<IMean[] 
       const $adClose = await page.waitForSelector("body > div.cb-downmask > div > a", {
         timeout: 1000
       })
-      console.log('词霸出现广告弹出')
+      console.log('[api_word] 词霸出现广告弹出')
       await $adClose.click();
     } catch (e) {
-      console.log('词霸没有弹出广告')
+      console.log('[api_word] 词霸没有弹出广告')
     }
     // 侧边那个菜单的词典列表起初是空的...
     await page.waitForFunction(() => {
@@ -51,7 +51,7 @@ export default async function getWordTranslation(word: string): Promise<IMean[] 
       return $menu.parentNode!.textContent!.includes("柯林斯");
     });
     if (hasCollinsDict) {
-      console.log(word+"有柯林斯释义");
+      console.log('[api_word] '+word+"有柯林斯释义");
       await page.waitFor(1000);
       // 该返回列表里会包含一些display:none的元素
       const articles = await page.$$(".info-article:not(.info-base)");
@@ -103,7 +103,7 @@ export default async function getWordTranslation(word: string): Promise<IMean[] 
         }
       }
     } else {
-      console.log(word+"无柯林斯释义");
+      console.log('[api_word] '+word+"无柯林斯释义");
       return undefined;
     }
   } catch (e) {

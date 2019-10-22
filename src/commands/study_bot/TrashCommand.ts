@@ -1,9 +1,9 @@
 import { Command, ParseParams, include, HandlerReturn, ParseReturn, BothHandlerParams, UserHandlerParams } from "lemon-bot";
 import { format } from 'date-fns';
+import { DbName, ColNames } from '@constants/constants';
 import { getTrashType } from '../../third_apis/api_trash';
 import { StudyBotCommandContext } from "./types";
 import { TrashType, ITrash } from '@dbTypes';
-import { DbName, ColNames } from '@constants/constants';
 
 class Trash1Command extends Command {
   directive(): string[] {
@@ -70,13 +70,13 @@ class Trash2Command extends Command<StudyBotCommandContext> {
         valid: 1
       };
       await collection.addDocument(newDoc);
-      this.reply(newDoc, likes);
+      return this.getReply(newDoc, likes);
     } else {
-      this.reply(doc, likes);
+      return this.getReply(doc, likes);
     }
   }
 
-  reply(doc: ITrash, likes: Record<string, TrashType>): string {
+  getReply(doc: ITrash, likes: Record<string, TrashType>): string {
     const { name, valid, ps } = doc;
     let type = doc.type;
     let likeStr = "";
