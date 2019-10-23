@@ -16,7 +16,9 @@ class HelpCommand extends Command {
 
 [CQ:emoji,id=128073] 回复[帮助4]查看英文单词相关命令。帮你慢速查询单词的柯林斯释义
 
-[CQ:emoji,id=128073] 回复[帮助5]查看消息提醒相关命令。`;
+[CQ:emoji,id=128073] 回复[帮助5]查看消息提醒相关命令。
+
+[CQ:emoji,id=128073] 我的开源地址：https://github.com/XHMM/bot-xiaoxin`;
   }
 }
 

@@ -9,7 +9,7 @@ import {
   CQRawMessageHelper,
   trigger,
   TriggerType,
-  fromQQGroupNormalMessage
+  fromQQGroupNormalMessage, fromQQGroupAnonymousMessage
 } from 'lemon-bot';
 import { notForSignWaterEmojis, canForSignWaterEmojis } from '@constants/water_emojis';
 import { format } from 'date-fns';
@@ -95,11 +95,11 @@ class Drink2Command extends Command<StudyBotCommandContext> {
     return ['喝水記錄', '喝水记录'];
   }
 
-  async group({ requestBody }: GroupHandlerParams):Promise<HandlerReturn> {
-    const { sender, group_id = -1 } = requestBody; // 私聊者，qq群将为-1
+  async group(params: GroupHandlerParams):Promise<HandlerReturn> {
+    if (fromQQGroupAnonymousMessage(params)) return;
+    const { sender, group_id } = params.requestBody;
     const date = new Date();
 
-    // userDoc会始终返回一条文档(因为不存在会创建)，所有无须再if(userDoc)判断了
     const userDoc = await drinkCollection.getDrinkUser({
       date,
       qqGroup: group_id,
@@ -179,7 +179,7 @@ class Drink2Command extends Command<StudyBotCommandContext> {
 
 class Drink3Command extends Command<StudyBotCommandContext> {
   directive(): string[] {
-    return ['没喝'];
+    return ['没喝', '不喝'];
   }
 
   group():HandlerReturn {
@@ -195,7 +195,7 @@ class Drink4Command extends Command<StudyBotCommandContext> {
   @scope(TriggerScope.admin|TriggerScope.owner)
   @trigger(TriggerType.at)
   async group({ requestBody }: GroupHandlerParams): Promise<HandlerReturn> {
-    const { group_id = -1 } = requestBody; // 私聊者，qq群将为-1
+    const { group_id } = requestBody;
     await qqGroupCollection.switchService(group_id, RemindService.drink, 'off');
     return '喝水提醒已关闭，希望群友们都养成了按时喝水的好习惯\n\nPS: 管理员或群主@并回复[开启喝水提醒]可重新开启提醒';
   }
@@ -209,7 +209,7 @@ class Drink5Command extends Command<StudyBotCommandContext> {
   @scope(TriggerScope.admin|TriggerScope.owner)
   @trigger(TriggerType.at)
   async group({ requestBody }: GroupHandlerParams):Promise<HandlerReturn> {
-    const { group_id = -1 } = requestBody; // 私聊者，qq群将为-1
+    const { group_id } = requestBody;
     await qqGroupCollection.switchService(group_id, RemindService.drink, 'on');
     return '喝水提醒已开启，冲鸭！';
   }
