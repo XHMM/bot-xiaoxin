@@ -7,9 +7,9 @@ import {
   fromQQGroupMessage,
   fromUserMessage,
 } from 'lemon-bot';
+import { sleep } from '@utils/index';
 import getWordTranslation from '../../third_apis/api_word';
 import { StudyBotCommandContext } from './types';
-import { sleep } from '@utils/index';
 
 export default class WordCommand extends Command<StudyBotCommandContext> {
   parse({ rawMessage }: ParseParams): ParseReturn {
@@ -29,17 +29,17 @@ export default class WordCommand extends Command<StudyBotCommandContext> {
     const word = params.data.word;
     const dbResult = await collection.findDocumentsByEnglishName(word);
     let numbers: {
-      userNumber?: number,
-      groupNumber?: number
+      user?: number,
+      group?: number
     } = {};
 
     if (fromQQGroupMessage(params))
       numbers = {
-        groupNumber: params.fromGroup,
+        group: params.fromGroup,
       };
     if (fromUserMessage(params))
       numbers = {
-        userNumber: params.fromUser,
+        user: params.fromUser,
       };
 
     if (dbResult.length !== 0) {
@@ -75,7 +75,7 @@ export default class WordCommand extends Command<StudyBotCommandContext> {
     }
   }
 
-  async replyContents(word: string, means: any[], { userNumber, groupNumber }: Partial<Record<'userNumber'|'groupNumber', number>>): Promise<void> {
+  async replyContents(word: string, means: any[], { user, group }: Partial<Record<'user'|'group', number>>): Promise<void> {
     const LIMIT = 1000; // qq消息大于1500左右就被截断了，所以这里自己拆分下，然后多次发送。
     const paragraphs: string[] = [`[${word}]的释义如下(结果来自金山词霸柯林斯词典)：`];
     let tmpParagraph = '';
@@ -97,8 +97,8 @@ export default class WordCommand extends Command<StudyBotCommandContext> {
       await sleep(500);
       await this.httpPlugin.sendMsg(
         {
-          userNumber,
-          groupNumber,
+          user,
+          group
         },
         p.trim()
       );

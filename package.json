@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --ext ts --exec ts-node -r tsconfig-paths/register ./src/index.ts",
-    "prod": "cross-env NODE_ENV=production nodemon --delay 3000ms --ext ts --exec ts-node -r tsconfig-paths/register ./src/index.ts",
-    "pm2": "pm2 start --name=coolq --log-date-format=\"YYYY-MM-DD HH:mm\" npm -- run prod",
     "eslint:fix": "eslint --ext .ts --fix --ignore-path .gitignore ."
   },
   "author": "XHMM",
@@ -16,8 +14,9 @@
     "cron": "^1.7.2",
     "cross-env": "^6.0.0",
     "date-fns": "^1.30.1",
+    "dotenv": "^8.2.0",
     "handy-redis": "^1.6.2",
-    "lemon-bot": "^0.4.3",
+    "lemon-bot": "^0.4.4",
     "mongodb": "^3.3.2",
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.0",

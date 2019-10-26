@@ -1,0 +1,118 @@
+version: "3"
+
+services:
+  mongo1:
+    image: "mongo"
+    container_name: mongo1
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs"]
+    networks:
+      - bot
+    expose:
+      - 27017
+#    volumes:
+#      - ${DB_Data_Volume}:/data/db
+
+  mongo2:
+    image: "mongo"
+    container_name: mongo2
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs"]
+    networks:
+      - bot
+    expose:
+      - 27017
+#    volumes:
+#      - ${DB_Data_Volume}:/data/db
+
+  mongoclient:
+    image: mongo
+    networks:
+      - bot
+    depends_on:
+      - mongo1
+      - mongo2
+    volumes:
+      - ./rs-setup.sh:/rs-setup.sh
+    entrypoint:
+      - /rs-setup.sh
+
+
+  redis:
+    image: redis
+    container_name: my-redis
+    networks:
+      - bot
+    expose:
+      - 6379
+
+  elasticsearch:
+    image: elasticsearch
+    container_name: my-elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # 避免error='Cannot allocate memory'的报错
+    networks:
+      - bot
+    expose:
+      - 9200
+
+  monstache:
+    image: rwynn/monstache
+    container_name: my-monstache
+    working_dir: /app
+    command: -f ./monstache.config.toml
+    volumes:
+      - ./monstache.config.toml:/app/monstache.config.toml
+    depends_on:
+      - mongo1
+      - mongo2
+      - elasticsearch
+    restart: unless-stopped
+    networks:
+      - bot
+    expose:
+      - 8080
+
+  coolq-study:
+    image: richardchien/cqhttp
+    volumes:
+      - ${Coolq_Volume}:/home/user/coolq
+    expose:
+      - 5700
+    ports:
+      - ${Study_Bot_VNC_Port}:9000
+    environment:
+      - VNC_PASSWD=${Study_Bot_VNC_Pwd}
+      - COOLQ_ACCOUNT=${Study_Bot}
+    container_name: study-bot
+    networks:
+      - bot
+
+  coolq-sync:
+    image: richardchien/cqhttp
+    volumes:
+      - ${Coolq_Volume}:/home/user/coolq
+    expose:
+      - 5700
+    ports:
+      - ${Sync_Bot_VNC_Port}:9000
+    environment:
+      - VNC_PASSWD=${Sync_Bot_VNC_Pwd}
+      - COOLQ_ACCOUNT=${Sync_Bot}
+    container_name: sync-bot
+    networks:
+      - bot
+
+  node:
+    container_name: my-node
+    expose:
+      - 8888
+    build:
+      context: .
+    env_file:
+      - ./.env
+    networks:
+      - bot
+    restart: unless-stopped
+
+networks:
+  bot:
+    driver: bridge

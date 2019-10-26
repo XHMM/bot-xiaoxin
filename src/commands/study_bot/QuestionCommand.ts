@@ -8,7 +8,7 @@ import {
   CQRawMessageHelper, fromQQGroupAnonymousMessage, fromQQGroupMessage
 } from 'lemon-bot';
 import { conditionalArrayMerge } from '@xhmm/utils';
-import { Question_Secret, ColNames, DbName } from '@constants/constants';
+import { ColNames } from '@constants/constants';
 import { questionCollection } from '../../db/collections';
 import { StudyBotCommandContext } from './types';
 
@@ -77,7 +77,7 @@ class Question2Command extends Command<StudyBotCommandContext> {
       const doc = await esClient
         // 应该是分词问题，比如content里包含了"hello 你好"，若搜索"he"搜不到，搜索"你"可以搜到，搜索"hello"可以搜到。中文分词默认是一个汉字一个汉字，英文或数字分词则是以空格来分的！！关于此的解决应该要使用其他分词器，暂不管（这块已笔记）
         .search({
-          index: `${DbName.toLowerCase()}.${ColNames.Question.toLowerCase()}`,
+          index: `${process.env.DB_Name!.toLowerCase()}.${ColNames.Question.toLowerCase()}`,
           body: {
             query: {
               bool: {
@@ -225,8 +225,8 @@ const questionCommands = [
 export default questionCommands;
 
 // -.- 这加密貌似没啥卵用
-const key = Buffer.from(Question_Secret.key, 'utf8');
-const iv = Buffer.from(Question_Secret.iv, 'utf8');
+const key = Buffer.from(process.env.Question_SecretKey!, 'utf8');
+const iv = Buffer.from(process.env.Question_SecretIv!, 'utf8');
 function encrypt(content): string {
   let res = '';
   const cipher = createCipheriv('aes-128-cbc', key, iv);

@@ -1,6 +1,6 @@
 import { Command, ParseParams, include, HandlerReturn, ParseReturn, BothHandlerParams, UserHandlerParams } from "lemon-bot";
 import { format } from 'date-fns';
-import { DbName, ColNames } from '@constants/constants';
+import { ColNames } from '@constants/constants';
 import { getTrashType } from '../../third_apis/api_trash';
 import { StudyBotCommandContext } from "./types";
 import { TrashType, ITrash } from '@dbTypes';
@@ -38,7 +38,7 @@ class Trash2Command extends Command<StudyBotCommandContext> {
     // 关键字相似垃圾查询
     const likes = await es
       .search({
-        index: `${DbName.toLowerCase()}.${ColNames.Trash.toLowerCase()}`,
+        index: `${process.env.DB_Name!.toLowerCase()}.${ColNames.Trash.toLowerCase()}`,
         body: {
           query: {
             match: {

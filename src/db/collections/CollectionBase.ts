@@ -1,5 +1,5 @@
 import { Signale } from 'signale';
-import { ColNames, DbName } from '@constants/constants';
+import { ColNames } from '@constants/constants';
 import getDatabase from '../get_database';
 import { ISchemas } from '@dbTypes';
 
@@ -12,7 +12,7 @@ export default abstract class CollectionBase<T extends ColNames> {
     const logger = new Signale({
       scope: "db"
     });
-    logger.info = logger.info.bind(logger, `[db: ${DbName}] [collection: ${this.collectionName}]`)
+    logger.info = logger.info.bind(logger, `[db: ${process.env.DB_Name}] [collection: ${this.collectionName}]`)
     this.logger = logger
   }
 

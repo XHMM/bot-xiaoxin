@@ -16,6 +16,7 @@ export default async function getWordTranslation(word: string): Promise<IMean[] 
     return undefined;
   }
   const browser = await pp.launch({
+    executablePath:'google-chrome-unstable',
     headless: true,
     args: ["--proxy-server='direct://'", "--proxy-bypass-list=*", '--no-sandbox', '--disable-setuid-sandbox']
   });

@@ -1,13 +1,16 @@
 import { MongoClient, Db } from "mongodb";
 import { isProd, logInfo } from "@utils/index";
-import { Database_Endpoint, DB_Auth } from '@constants/constants';
 
-const client = new MongoClient(Database_Endpoint, {
+const client = new MongoClient(process.env.DB_Endpoint!+'/'+process.env.DB_Name, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  replicaSet: process.env.DB_ReplicaSet,
   // connectWithNoPrimary: true,
   ...(isProd() && {
-    auth: DB_Auth
+    auth: {
+      user: process.env.DB_Name!,
+      password: process.env.DB_Pwd!
+    }
   })
 });
 let connection: MongoClient;
@@ -17,7 +20,7 @@ export default async function getDatabase(): Promise<Db> {
     logInfo("database connecting...");
     // 多次调用connect时，控制台会打印一些 xx is not supported信息，相关so: https://stackoverflow.com/questions/54639778/why-am-i-getting-this-deprecated-warning-mongodb)
     connection = await client.connect();
-    logInfo(`database connected to ${Database_Endpoint}`);
+    logInfo(`database connected to ${process.env.DB_Endpoint}`);
     return connection.db();
   } catch (e) {
     console.error("getDatabase error::::");

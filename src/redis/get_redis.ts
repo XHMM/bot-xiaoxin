@@ -1,13 +1,12 @@
 import { createHandyClient, IHandyRedis } from 'handy-redis';
 
 import { logInfo } from '@utils/index';
-import { Redis_Endpoint } from '@constants/constants';
 
 let client: IHandyRedis;
 export default function getRedisClient(): IHandyRedis {
   if (client) return client;
   try {
-    client = createHandyClient(Redis_Endpoint);
+    client = createHandyClient(process.env.Redis_Endpoint!);
     logInfo("redis client created");
     return client;
   } catch (e) {

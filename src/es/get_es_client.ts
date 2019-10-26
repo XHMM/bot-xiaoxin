@@ -1,12 +1,11 @@
 import { Client } from "@elastic/elasticsearch";
-import { ES_Endpoint } from '@constants/constants';
 
 let client: Client;
 export default function getESClient(): Client {
   try {
     if (client) return client;
     client = new Client({
-      node: ES_Endpoint
+      node: process.env.ES_Endpoint
     });
     return client;
   } catch (e) {

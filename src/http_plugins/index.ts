@@ -1,8 +1,7 @@
 import { HttpPlugin } from 'lemon-bot';
-import { SyncBot_Http_Plugin_Endpoint, StudyBot_Http_Plugin_Endpoint } from '@constants/constants';
 
-const studyBotHttpPlugin = new HttpPlugin(StudyBot_Http_Plugin_Endpoint)
-const syncBotHttpPlugin = new HttpPlugin(SyncBot_Http_Plugin_Endpoint);
+const studyBotHttpPlugin = new HttpPlugin(process.env.StudyBot_Http_Plugin_Endpoint!)
+const syncBotHttpPlugin = new HttpPlugin(process.env.SyncBot_Http_Plugin_Endpoint!);
 
 export {
   studyBotHttpPlugin,

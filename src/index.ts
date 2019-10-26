@@ -1,6 +1,12 @@
-import { RobotFactory, Session, Logger } from 'lemon-bot';
+/* eslint-disable import/first */
+import * as path from 'path';
 import { isProd } from '@utils/index';
-import { Sync_Bot, Study_Bot } from '@constants/constants';
+
+require('dotenv').config({
+  path: isProd() ? path.resolve('../.env') : path.resolve('../.env.dev')
+})
+
+import { RobotFactory, Session, Logger } from 'lemon-bot';
 import getDatabase from './db/get_database';
 import { initCollections } from './db/init';
 import { initCrontabs } from './crontabs/init';
@@ -34,7 +40,7 @@ async function main(): Promise<void> {
 
     const studyRobot = RobotFactory.create<StudyBotCommandContext>({
       port: 8888,
-      robot: Study_Bot,
+      robot: +process.env.Study_Bot!,
       httpPlugin: studyBotHttpPlugin,
       session: new Session(getRedisClient()),
       commands: studyBotCommands,
@@ -48,7 +54,7 @@ async function main(): Promise<void> {
     });
     const syncRobot = RobotFactory.create<SyncBotCommandContext>({
       port: 8888,
-      robot: Sync_Bot,
+      robot: +process.env.Sync_Bot!,
       httpPlugin: syncBotHttpPlugin,
       session: new Session(getRedisClient()),
       commands: syncBotCommands,
